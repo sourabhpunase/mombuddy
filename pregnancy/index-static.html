@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MomBuddy - Your Pregnancy Companion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #fdf2f8, #ffffff);
+      min-height: 100vh;
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .hover-scale:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+    
+    .hover-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md py-4 px-6 md:px-10 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center">
+      <span class="text-2xl font-bold text-pink-600">MomBuddy</span>
+    </div>
+    
+    <div class="hidden md:flex space-x-8">
+      <a href="#home" class="text-gray-700 hover:text-pink-600 transition">Home</a>
+      <a href="#stages" class="text-gray-700 hover:text-pink-600 transition">Pregnancy Stages</a>
+      <a href="#features" class="text-gray-700 hover:text-pink-600 transition">AI Features</a>
+      <a href="#about" class="text-gray-700 hover:text-pink-600 transition">About</a>
+    </div>
+    
+    <button class="bg-pink-600 text-white px-6 py-2 rounded-full hover:bg-pink-700 transition shadow-md">
+      Sign Up
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="py-16 px-6 md:px-10 flex flex-col md:flex-row items-center">
+    <div class="md:w-1/2 mb-10 md:mb-0">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight">
+        Your Personal <span class="text-pink-600">Pregnancy Companion</span>
+      </h1>
+      <p class="text-lg text-gray-600 mb-8">
+        Navigate your pregnancy journey with confidence. Get personalized guidance, 
+        track your progress, and connect with AI-powered insights tailored just for you.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button class="bg-pink-600 text-white px-8 py-3 rounded-full hover:bg-pink-700 transition shadow-lg text-lg hover-button">
+          Get Started
+        </button>
+        <button class="border-2 border-pink-600 text-pink-600 px-8 py-3 rounded-full hover:bg-pink-50 transition text-lg">
+          Learn More
+        </button>
+      </div>
+    </div>
+    <div class="md:w-1/2 flex justify-center">
+      <div class="w-full max-w-md rounded-lg shadow-2xl animate-float bg-pink-200 h-64 flex items-center justify-center">
+        <span class="text-pink-800 font-bold">Pregnant Woman Image</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pregnancy Stages Section -->
+  <section id="stages" class="py-16 px-6 md:px-10 bg-gray-50">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Your Pregnancy Journey</h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        Every pregnancy is unique, but all follow three distinct stages. Select your current trimester to learn more about what to expect.
+      </p>
+    </div>
+
+    <!-- Stage Selection -->
+    <div class="flex flex-col md:flex-row gap-6 justify-center mb-12">
+      <div class="bg-pink-100 border border-gray-200 rounded-xl p-6 cursor-pointer transition-all hover:shadow-lg flex-1 max-w-sm mx-auto md:mx-0 hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full border-pink-400 bg-white flex items-center justify-center text-xl font-bold text-pink-800">
+            1
+          </div>
+          <div class="ml-4">
+            <h3 class="text-xl font-bold text-gray-800">First Trimester</h3>
+            <p class="text-gray-600">Weeks 1-12</p>
+          </div>
+        </div>
+        <p class="text-gray-700">The beginning of your pregnancy journey.</p>
+      </div>
+
+      <div class="bg-purple-100 border border-gray-200 rounded-xl p-6 cursor-pointer transition-all hover:shadow-lg flex-1 max-w-sm mx-auto md:mx-0 hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full border-purple-400 bg-white flex items-center justify-center text-xl font-bold text-purple-800">
+            2
+          </div>
+          <div class="ml-4">
+            <h3 class="text-xl font-bold text-gray-800">Second Trimester</h3>
+            <p class="text-gray-600">Weeks 13-27</p>
+          </div>
+        </div>
+        <p class="text-gray-700">Often called the 'golden period' of pregnancy.</p>
+      </div>
+
+      <div class="bg-blue-100 border border-gray-200 rounded-xl p-6 cursor-pointer transition-all hover:shadow-lg flex-1 max-w-sm mx-auto md:mx-0 hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 rounded-full border-blue-400 bg-white flex items-center justify-center text-xl font-bold text-blue-800">
+            3
+          </div>
+          <div class="ml-4">
+            <h3 class="text-xl font-bold text-gray-800">Third Trimester</h3>
+            <p class="text-gray-600">Weeks 28-40+</p>
+          </div>
+        </div>
+        <p class="text-gray-700">The final stretch before meeting your baby.</p>
+      </div>
+    </div>
+
+    <!-- First Trimester Details (Example) -->
+    <div class="bg-white rounded-xl shadow-xl p-6 md:p-10 max-w-4xl mx-auto">
+      <div class="flex flex-col md:flex-row items-start gap-8">
+        <div class="md:w-1/3">
+          <div class="w-full rounded-lg shadow-md bg-pink-100 h-48 flex items-center justify-center">
+            <span class="text-pink-800 font-bold">First Trimester Image</span>
+          </div>
+          <div class="mt-6 p-4 rounded-lg bg-pink-100">
+            <h4 class="font-bold text-lg mb-2">AI Support Feature</h4>
+            <p class="text-gray-700">AI Symptom Tracker: Monitor your first trimester symptoms and get personalized advice based on your specific needs.</p>
+          </div>
+        </div>
+        <div class="md:w-2/3">
+          <h3 class="text-2xl font-bold mb-4 text-pink-800">
+            First Trimester: Weeks 1-12
+          </h3>
+          <div class="prose max-w-none">
+            <p class="mb-4 text-gray-700">
+              The first trimester spans from week 1 through week 12 of pregnancy and is a critical period of development. During these initial weeks, your baby's major organs and body systems begin to form, including the brain, heart, and spinal cord.
+            </p>
+            <p class="mb-4 text-gray-700">
+              By week 8, your baby is called a fetus and is about the size of a kidney bean. By the end of the first trimester, your baby will be about 3 inches long and weigh around 1 ounce.
+            </p>
+            <p class="mb-4 text-gray-700">
+              <strong>Common symptoms you might experience include:</strong><br>
+              • Morning sickness (nausea and vomiting)<br>
+              • Extreme fatigue<br>
+              • Frequent urination<br>
+              • Tender, swollen breasts<br>
+              • Food aversions or cravings<br>
+              • Mood swings<br>
+              • Heartburn and constipation
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Features Section -->
+  <section id="features" class="py-16 px-6 md:px-10">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">AI-Powered Pregnancy Support</h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        Our intelligent features provide personalized guidance throughout your pregnancy journey.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover-scale">
+        <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Symptom Tracker</h3>
+        <p class="text-gray-600">
+          Log your symptoms and receive AI-powered insights on what's normal and when to consult your doctor.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover-scale">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Development Timeline</h3>
+        <p class="text-gray-600">
+          Track your baby's growth week by week with detailed visualizations and personalized milestones.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition hover-scale">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Nutrition Guide</h3>
+        <p class="text-gray-600">
+          Get personalized meal plans and nutrition advice based on your trimester and specific needs.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 px-6 md:px-10 bg-gray-50">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">What Moms Are Saying</h2>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+        Hear from mothers who have used MomBuddy throughout their pregnancy journey.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="bg-white p-6 rounded-xl shadow-md hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-pink-700 font-bold">
+            SM
+          </div>
+          <div class="ml-4">
+            <h4 class="font-bold">Sarah M.</h4>
+            <p class="text-gray-500 text-sm">First-time mom</p>
+          </div>
+        </div>
+        <p class="text-gray-700">
+          "The trimester guides were incredibly detailed and helped me know exactly what to expect. The AI symptom checker gave me peace of mind during those anxious first weeks."
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-md hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-purple-700 font-bold">
+            JT
+          </div>
+          <div class="ml-4">
+            <h4 class="font-bold">Jessica T.</h4>
+            <p class="text-gray-500 text-sm">Second pregnancy</p>
+          </div>
+        </div>
+        <p class="text-gray-700">
+          "Even though this was my second pregnancy, I discovered so many new things through the app. The nutrition recommendations were personalized and actually delicious!"
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-md hover-scale">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold">
+            RL
+          </div>
+          <div class="ml-4">
+            <h4 class="font-bold">Rachel L.</h4>
+            <p class="text-gray-500 text-sm">High-risk pregnancy</p>
+          </div>
+        </div>
+        <p class="text-gray-700">
+          "Having a high-risk pregnancy was scary, but the app helped me track my symptoms and know when to call my doctor. The community support was invaluable during tough times."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 px-6 md:px-10 bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Pregnancy Journey?</h2>
+      <p class="text-xl mb-8">
+        Join thousands of moms who are navigating pregnancy with confidence using MomBuddy.
+      </p>
+      <button class="bg-white text-pink-600 px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-lg text-lg font-bold hover-button">
+        Download Now
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12 px-6 md:px-10">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <h3 class="text-2xl font-bold mb-4">MomBuddy</h3>
+        <p class="text-gray-300">
+          Your personal AI-powered pregnancy companion, providing support through every stage of your journey.
+        </p>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          <li><a href="#home" class="text-gray-300 hover:text-white transition">Home</a></li>
+          <li><a href="#stages" class="text-gray-300 hover:text-white transition">Pregnancy Stages</a></li>
+          <li><a href="#features" class="text-gray-300 hover:text-white transition">AI Features</a></li>
+          <li><a href="#about" class="text-gray-300 hover:text-white transition">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Resources</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Blog</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">FAQ</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Privacy Policy</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-bold mb-4">Connect</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Contact Us</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Support</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Instagram</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-white transition">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+      <p>&copy; 2023 MomBuddy. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple JavaScript to handle trimester selection
+    document.addEventListener('DOMContentLoaded', function() {
+      const trimesterCards = document.querySelectorAll('#stages .hover-scale');
+      
+      trimesterCards.forEach((card, index) => {
+        card.addEventListener('click', function() {
+          // Remove active class from all cards
+          trimesterCards.forEach(c => c.classList.remove('border-4'));
+          
+          // Add active class to clicked card
+          card.classList.add('border-4');
+          
+          // You would typically load the appropriate trimester details here
+          console.log(`Selected trimester ${index + 1}`);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
