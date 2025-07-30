@@ -7,22 +7,12 @@
       "config": {
         "distDir": "pregnancy/dist"
       }
-    },
-    {
-      "src": "server/index.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server/index.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/pregnancy/dist/$1"
     }
-  ],
-  "buildCommand": "cd pregnancy && npm install && npm run build",
-  "outputDirectory": "pregnancy/dist"
+  ]
 }

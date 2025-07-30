@@ -4,11 +4,9 @@
   "description": "MomBuddy - Pregnancy Companion App with AI-powered features",
   "main": "index.js",
   "scripts": {
-    "install-all": "npm install && cd pregnancy && npm install && cd ../server && npm install",
-    "dev": "concurrently \"cd server && npm start\" \"cd pregnancy && npm run dev\"",
-    "build": "cd pregnancy && npm run build",
-    "start": "cd server && npm start",
-    "deploy": "npm run build && npm run start"
+    "build": "cd pregnancy && npm install && npm run build",
+    "dev": "cd pregnancy && npm run dev",
+    "start": "cd server && npm start"
   },
   "repository": {
     "type": "git",
