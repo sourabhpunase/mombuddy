@@ -81,6 +81,10 @@ The app integrates with an AI model to provide personalized pregnancy advice. Th
 - Birth plan creation assistance
 - Pregnancy timeline customization
 
+## Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions on Render and other platforms.
+
 ## License
 
 This project is licensed under the MIT License.
