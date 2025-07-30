@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "static": "npx serve -s ."
+    "static": "npx serve -s dist"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.11",
@@ -26,7 +26,8 @@
     "realtimecursor-sdk-fixed": "^1.1.0",
     "socket.io-client": "^4.8.1",
     "sourabhrealtime": "^4.2.7",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "serve": "^14.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "pregnancy/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/pregnancy/dist/$1"
+    }
+  ],
+  "buildCommand": "cd pregnancy && npm run build",
+  "outputDirectory": "pregnancy/dist",
+  "installCommand": "npm run install-all"
+}
