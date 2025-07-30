@@ -5,8 +5,12 @@
       "src": "pregnancy/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "pregnancy/dist"
       }
+    },
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -19,7 +23,6 @@
       "dest": "/pregnancy/dist/$1"
     }
   ],
-  "buildCommand": "cd pregnancy && npm run build",
-  "outputDirectory": "pregnancy/dist",
-  "installCommand": "npm run install-all"
+  "buildCommand": "cd pregnancy && npm install && npm run build",
+  "outputDirectory": "pregnancy/dist"
 }

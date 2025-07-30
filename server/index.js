@@ -9,5 +9,15 @@ app.use(express.json());
 app.use("/api/symptoms", symptomRouter);
 app.use("/api/ai", aiRouter);
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.get('/', (req, res) => {
+  res.json({ message: 'MomBuddy API is running!' });
+});
+
+// Export for Vercel
+export default app;
+
+// Local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
