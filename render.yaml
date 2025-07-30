@@ -2,7 +2,7 @@ services:
   - type: web
     name: mombuddy-frontend
     env: node
-    buildCommand: cd pregnancy && npm install && npm run build
+    buildCommand: cd pregnancy && npm install --legacy-peer-deps && npm run build
     startCommand: cd pregnancy && npx serve -s dist -l 3000
     envVars:
       - key: NODE_VERSION
