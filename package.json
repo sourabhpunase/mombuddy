@@ -4,6 +4,7 @@
   "description": "MomBuddy - Pregnancy Companion App with AI-powered features",
   "main": "index.js",
   "scripts": {
+    "install-all": "npm install",
     "build": "cd pregnancy && npm install && npm run build",
     "dev": "cd pregnancy && npm run dev",
     "start": "cd server && npm start"
