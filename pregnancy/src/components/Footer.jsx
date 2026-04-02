@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Mail, Phone, MapPin, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, Sparkles } from 'lucide-react';
+
+const brandLogo = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdn0a46AYCWk_nck9efpCxELF3GSAkX7HR-w&s';
 
 const Footer = () => {
   return (
@@ -10,7 +12,11 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <Heart className="h-8 w-8 text-[#d85e7a]" />
+              <img
+                src={brandLogo}
+                alt="MomBuddy logo"
+                className="h-10 w-10 rounded-full object-cover bg-white/80 p-0.5 ring-2 ring-[#ecd3ce] dark:bg-white/10 dark:ring-white/10"
+              />
               <span className="text-2xl font-bold">MomBuddy</span>
             </div>
             <p className="text-sm text-stone-600 dark:text-stone-300">

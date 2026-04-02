@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext.jsx';
 
+const brandLogo = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdn0a46AYCWk_nck9efpCxELF3GSAkX7HR-w&s';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -59,9 +61,9 @@ const Navbar = () => {
             onClick={() => setIsOpen(false)}
           >
             <img
-              src="https://png.pngtree.com/png-vector/20250512/ourlarge/pngtree-mom-and-baby-clipart-logo-png-image_16213228.png"
-              alt=""
-              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover ring-2 ring-[#f2d5cb] dark:ring-[#7a5867]/60"
+              src={brandLogo}
+              alt="MomBuddy logo"
+              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover bg-white/80 p-0.5 ring-2 ring-[#f2d5cb] dark:bg-white/10 dark:ring-[#7a5867]/60"
             />
             <div className="leading-tight min-w-0">
               <h1 className="text-base sm:text-lg font-bold tracking-wide text-white truncate">
