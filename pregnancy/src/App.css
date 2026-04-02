@@ -56,13 +56,25 @@
   background: #f1f1f1;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #e879a8;
+  background: linear-gradient(180deg, #ff8d8f, #d85e7a);
   border-radius: 4px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff9aa3, #c38ae1);
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #d6689a;
+  background: #d85e7a;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #d2a1f0;
 }
 
 /* Mobile responsiveness */
@@ -74,7 +86,7 @@
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(90deg, #ec4899, #8b5cf6);
+  background: linear-gradient(90deg, #ff7f8c, #d95f78 42%, #bb8add 76%, #e3bf87 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -97,7 +109,7 @@
 
 .hover-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 4px 12px rgba(217, 95, 120, 0.34);
 }
 
 /* Trimester card styles */
@@ -124,4 +136,87 @@
 
 .trimester-card:hover::before {
   transform: translateX(100%);
+}
+
+@keyframes heroFloatSoft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes heroDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -12px, 0) scale(1.04);
+  }
+}
+
+@keyframes heroPulseGlow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes heroScan {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.hero-float-soft {
+  animation: heroFloatSoft 7s ease-in-out infinite;
+}
+
+.hero-drift {
+  animation: heroDrift 12s ease-in-out infinite;
+}
+
+.hero-pulse-glow {
+  animation: heroPulseGlow 5s ease-in-out infinite;
+}
+
+.hero-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 239, 230, 0.42), transparent);
+  transform: translateX(-120%);
+  animation: heroScan 4.6s linear infinite;
+  pointer-events: none;
+}
+
+.hero-aurora-text {
+  background: linear-gradient(135deg, #ff7f8c 0%, #d95f78 34%, #b88ada 68%, #e5bb82 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-mesh {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 154, 163, 0.24), transparent 22%),
+    radial-gradient(circle at 80% 22%, rgba(184, 138, 218, 0.18), transparent 18%),
+    radial-gradient(circle at 50% 80%, rgba(227, 191, 135, 0.16), transparent 24%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.06));
 }

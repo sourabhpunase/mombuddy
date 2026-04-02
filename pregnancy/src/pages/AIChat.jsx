@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Bot, User, Loader } from 'lucide-react';
+import aiService from '../services/aiService.js';
+import CareOverviewPanel from '../components/CareOverviewPanel.jsx';
 
 const AIChat = () => {
   const [messages, setMessages] = useState([
@@ -8,60 +10,35 @@ const AIChat = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
-    scrollToBottom();
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const sendText = async (text) => {
+    const trimmed = text.trim();
+    if (!trimmed || isLoading) return;
 
-    const userMessage = { id: Date.now(), text: input, sender: 'user' };
-    setMessages(prev => [...prev, userMessage]);
-    const currentInput = input;
+    const userMessage = { id: Date.now(), text: trimmed, sender: 'user' };
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
-      // Use AI service
-      const response = await fetch('http://localhost:5000/api/ai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: currentInput })
-      });
-      
-      const data = await response.json();
-      const botResponse = data.response || generateAIResponse(currentInput);
-      
-      setMessages(prev => [...prev, { id: Date.now() + 1, text: botResponse, sender: 'bot' }]);
+      const botText = await aiService.sendMessage(trimmed, {});
+      setMessages((prev) => [...prev, { id: Date.now() + 1, text: botText, sender: 'bot' }]);
     } catch (error) {
       console.error('AI Error:', error);
-      const fallbackResponse = generateAIResponse(currentInput);
-      setMessages(prev => [...prev, { id: Date.now() + 1, text: fallbackResponse, sender: 'bot' }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, text: aiService.getFallbackResponse(trimmed, {}), sender: 'bot' }
+      ]);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const generateAIResponse = (userInput) => {
-    const responses = {
-      'symptoms': "I can help you track and understand pregnancy symptoms. Common first trimester symptoms include morning sickness, fatigue, and breast tenderness. Would you like specific advice about any symptoms you're experiencing?",
-      'nutrition': "Proper nutrition is crucial during pregnancy. Focus on folate, iron, calcium, and protein. Avoid raw fish, unpasteurized dairy, and limit caffeine. Would you like a personalized meal plan?",
-      'exercise': "Gentle exercise like walking, swimming, and prenatal yoga are great during pregnancy. Always consult your doctor before starting any new exercise routine. What type of activities interest you?",
-      'trimester': "Each trimester brings unique changes. First trimester focuses on organ development, second trimester is often the most comfortable, and third trimester prepares for birth. Which trimester are you in?",
-      'default': "I'm here to support your pregnancy journey with evidence-based information. I can help with symptoms, nutrition, exercise, and general pregnancy questions. What would you like to know more about?"
-    };
-
-    const lowerInput = userInput.toLowerCase();
-    for (const [key, response] of Object.entries(responses)) {
-      if (lowerInput.includes(key)) return response;
-    }
-    return responses.default;
   };
 
   const quickQuestions = [
@@ -72,98 +49,112 @@ const AIChat = () => {
   ];
 
   return (
-    <div className="min-h-screen py-20 px-6">
-      <div className="max-w-4xl mx-auto">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold text-center mb-8"
-        >
-          AI Pregnancy Assistant
-        </motion.h1>
+    <div className="page-shell max-w-4xl mx-auto">
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8 text-[var(--care-text)] dark:text-white"
+      >
+        AI Pregnancy Assistant
+      </motion.h1>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4">
-            {messages.map((message) => (
-              <motion.div
-                key={message.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+      <CareOverviewPanel
+        className="mb-6"
+        title="AI support"
+        summary="The same weekly context stays visible while you ask questions, so guidance never feels disconnected from your routine."
+      />
+
+      <div className="card-surface overflow-hidden flex flex-col min-h-[28rem] sm:min-h-[32rem] max-h-[calc(100vh-8rem)]">
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-4 overscroll-contain"
+        >
+          {messages.map((message) => (
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`flex items-start gap-2 max-w-[min(100%,28rem)] sm:max-w-md ${
+                  message.sender === 'user' ? 'flex-row-reverse' : ''
+                }`}
               >
-                <div className={`flex items-start space-x-2 max-w-xs lg:max-w-md ${
-                  message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                }`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    message.sender === 'user' ? 'bg-pink-600' : 'bg-purple-600'
-                  }`}>
-                    {message.sender === 'user' ? 
-                      <User className="w-4 h-4 text-white" /> : 
-                      <Bot className="w-4 h-4 text-white" />
-                    }
-                  </div>
-                  <div className={`px-4 py-2 rounded-lg ${
-                    message.sender === 'user' 
-                      ? 'bg-pink-600 text-white' 
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    <div className="whitespace-pre-wrap">{message.text}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-            
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
+                <div
+                  className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center ${
+                    message.sender === 'user' ? 'bg-[#b27d93]' : 'bg-[#8f7287]'
+                  }`}
+                >
+                  {message.sender === 'user' ? (
+                    <User className="w-4 h-4 text-white" />
+                  ) : (
                     <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-gray-100 px-4 py-2 rounded-lg">
-                    <Loader className="w-4 h-4 animate-spin" />
-                  </div>
+                  )}
+                </div>
+                <div
+                  className={`px-4 py-2 rounded-2xl text-sm sm:text-base ${
+                    message.sender === 'user'
+                      ? 'bg-[#b27d93] text-white'
+                      : 'bg-[var(--care-surface-muted)] dark:bg-white/5 text-[var(--care-text)] dark:text-slate-100'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap break-words">{message.text}</div>
                 </div>
               </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+            </motion.div>
+          ))}
 
-          {/* Quick Questions */}
-          <div className="px-6 py-4 bg-gray-50 border-t">
-            <p className="text-sm text-gray-600 mb-2">Quick questions:</p>
-            <div className="flex flex-wrap gap-2">
-              {quickQuestions.map((question, index) => (
-                <button
-                  key={index}
-                  onClick={() => setInput(question)}
-                  className="text-xs bg-white px-3 py-1 rounded-full border hover:bg-pink-50 transition-colors"
-                >
-                  {question}
-                </button>
-              ))}
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#8f7287] flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+                <div className="bg-[var(--care-surface-muted)] dark:bg-white/5 px-4 py-2 rounded-2xl">
+                  <Loader className="w-4 h-4 animate-spin text-[#8f7287] dark:text-[#dfc4cf]" />
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+        </div>
 
-          {/* Input Area */}
-          <div className="p-6 border-t">
-            <div className="flex space-x-4">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask me anything about pregnancy..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
+        <div className="px-4 sm:px-6 py-3 bg-[var(--care-surface-muted)] dark:bg-white/5 border-t border-[var(--care-border)] dark:border-white/10">
+          <p className="text-xs sm:text-sm text-body mb-2">Quick questions:</p>
+          <div className="flex flex-wrap gap-2">
+            {quickQuestions.map((question, index) => (
               <button
-                onClick={handleSend}
-                disabled={!input.trim() || isLoading}
-                className="bg-gradient-to-r from-pink-600 to-purple-600 text-white p-2 rounded-full hover:shadow-lg transition-all disabled:opacity-50"
+                key={index}
+                type="button"
+                onClick={() => sendText(question)}
+                disabled={isLoading}
+                className="text-left text-xs sm:text-sm bg-white dark:bg-white/5 px-3 py-2 rounded-full border border-[var(--care-border)] dark:border-white/10 hover:bg-[var(--care-surface-muted)] dark:hover:bg-white/10 transition-colors disabled:opacity-50"
               >
-                <Send className="w-5 h-5" />
+                {question}
               </button>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-4 sm:p-6 border-t border-[var(--care-border)] dark:border-white/10">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendText(input)}
+              placeholder="Ask me anything about pregnancy..."
+              className="input-field rounded-full flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => sendText(input)}
+              disabled={!input.trim() || isLoading}
+              className="shrink-0 bg-gradient-to-r from-[#c28aa0] to-[#8f7287] text-white p-3 rounded-full hover:shadow-lg transition-all disabled:opacity-50 self-end sm:self-auto"
+              aria-label="Send message"
+            >
+              <Send className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>

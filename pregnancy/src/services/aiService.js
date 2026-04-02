@@ -1,7 +1,16 @@
+import { getApiBaseUrl } from './mombuddyApi.js';
+
+function resolveAiBaseUrl() {
+  const custom = getApiBaseUrl();
+  if (custom) return `${custom}/api/ai`;
+  if (import.meta.env.DEV) return 'http://localhost:5000/api/ai';
+  return '';
+}
+
 // AI Service for pregnancy chatbot using specialized models
 class AIService {
   constructor() {
-    this.apiUrl = 'http://localhost:5000/api/ai';
+    this.apiUrl = resolveAiBaseUrl();
     this.models = {
       preConception: 'llama-preconception-specialist',
       fertility: 'llama-fertility-optimizer', 
@@ -13,6 +22,9 @@ class AIService {
   }
 
   async sendMessage(message, context = {}) {
+    if (!this.apiUrl) {
+      return this.getFallbackResponse(message, context);
+    }
     try {
       // Select appropriate model based on context
       const model = this.selectModel(context);
@@ -95,6 +107,17 @@ class AIService {
 
   // Analyze symptoms using AI
   async analyzeSymptoms(symptoms) {
+    if (!this.apiUrl) {
+      return {
+        analysis: "Based on your symptoms, this appears to be within normal pregnancy ranges. However, always consult your healthcare provider for personalized advice.",
+        recommendations: [
+          "Monitor symptoms and note any changes",
+          "Stay hydrated and get adequate rest",
+          "Contact your doctor if symptoms worsen"
+        ],
+        urgency: "low"
+      };
+    }
     try {
       const response = await fetch(`${this.apiUrl}/analyze-symptoms`, {
         method: 'POST',
@@ -126,6 +149,9 @@ class AIService {
 
   // Generate nutrition recommendations
   async getNutritionAdvice(trimester, preferences = {}) {
+    if (!this.apiUrl) {
+      return this.getFallbackNutrition(trimester);
+    }
     try {
       const response = await fetch(`${this.apiUrl}/nutrition`, {
         method: 'POST',

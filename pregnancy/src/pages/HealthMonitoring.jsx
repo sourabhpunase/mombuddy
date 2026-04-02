@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Heart, TrendingUp, AlertTriangle, Shield, Brain, Zap, Target, Bell, Calendar, Thermometer, Droplets } from 'lucide-react';
+import { Activity, Heart, TrendingUp, AlertTriangle, Shield, Brain, Zap, Target, Bell, Calendar, Thermometer } from 'lucide-react';
+import CareOverviewPanel from '../components/CareOverviewPanel.jsx';
 
 const HealthMonitoring = () => {
-  const [currentWeek, setCurrentWeek] = useState(20);
-  const [vitalSigns, setVitalSigns] = useState({
+  const [currentWeek] = useState(20);
+  const [vitalSigns] = useState({
     bloodPressure: { systolic: 118, diastolic: 76, timestamp: new Date() },
     heartRate: { bpm: 78, timestamp: new Date() },
     weight: { kg: 65, timestamp: new Date() },
-    temperature: { celsius: 36.8, timestamp: new Date() }
+    temperature: { celsius: 36.8, timestamp: new Date() },
   });
-  const [symptoms, setSymptoms] = useState([]);
   const [alerts, setAlerts] = useState([]);
 
   const aiModels = {
@@ -19,140 +19,90 @@ const HealthMonitoring = () => {
     symptom: 'SymptomAnalyzer-Maternal-v4.1',
     trend: 'HealthTrend-AI-v2.8',
     alert: 'SmartAlert-System-v3.2',
-    prediction: 'ComplicationPredictor-v4.6'
+    prediction: 'ComplicationPredictor-v4.6',
   };
 
-  const healthMetrics = {
-    bloodPressure: {
+  const healthMetrics = [
+    {
+      key: 'bloodPressure',
       name: 'Blood Pressure',
       icon: Heart,
-      color: 'red',
-      gradient: 'from-red-400 to-pink-500',
-      normal: { systolic: [90, 140], diastolic: [60, 90] },
+      value: `${vitalSigns.bloodPressure.systolic}/${vitalSigns.bloodPressure.diastolic}`,
       unit: 'mmHg',
       frequency: 'Daily',
-      importance: 'Critical for detecting preeclampsia'
+      importance: 'Critical for watching preeclampsia risk and sudden blood pressure changes.',
+      tone: 'rose',
     },
-    heartRate: {
+    {
+      key: 'heartRate',
       name: 'Heart Rate',
       icon: Activity,
-      color: 'blue',
-      gradient: 'from-blue-400 to-cyan-500',
-      normal: [60, 100],
+      value: vitalSigns.heartRate.bpm,
       unit: 'bpm',
       frequency: 'Daily',
-      importance: 'Monitors cardiovascular adaptation'
+      importance: 'Tracks cardiovascular adaptation as pregnancy progresses.',
+      tone: 'mauve',
     },
-    weight: {
+    {
+      key: 'weight',
       name: 'Weight Gain',
       icon: TrendingUp,
-      color: 'green',
-      gradient: 'from-green-400 to-emerald-500',
-      normal: { weekly: [0.2, 0.5] },
+      value: vitalSigns.weight.kg,
       unit: 'kg',
       frequency: 'Weekly',
-      importance: 'Tracks healthy pregnancy progression'
+      importance: 'Helps confirm steady pregnancy progression without overloading the screen.',
+      tone: 'sage',
     },
-    temperature: {
+    {
+      key: 'temperature',
       name: 'Body Temperature',
       icon: Thermometer,
-      color: 'orange',
-      gradient: 'from-orange-400 to-red-500',
-      normal: [36.1, 37.2],
+      value: vitalSigns.temperature.celsius,
       unit: '°C',
       frequency: 'As needed',
-      importance: 'Detects infections and fever'
-    }
-  };
+      importance: 'Useful for spotting infection or fever patterns early.',
+      tone: 'warm',
+    },
+  ];
 
-  const riskFactors = {
-    preeclampsia: {
+  const riskFactors = [
+    {
       name: 'Preeclampsia Risk',
       indicators: ['High BP', 'Protein in urine', 'Severe headaches', 'Vision changes'],
       severity: 'High',
-      monitoring: 'Daily BP, weekly urine tests',
-      aiModel: aiModels.risk
+      monitoring: 'Daily blood pressure, weekly urine checks',
+      aiModel: aiModels.risk,
     },
-    gestationalDiabetes: {
+    {
       name: 'Gestational Diabetes',
       indicators: ['Excessive thirst', 'Frequent urination', 'Fatigue', 'Blurred vision'],
       severity: 'Moderate',
-      monitoring: 'Blood glucose testing',
-      aiModel: aiModels.prediction
+      monitoring: 'Glucose screening and meal pattern review',
+      aiModel: aiModels.prediction,
     },
-    pretermLabor: {
+    {
       name: 'Preterm Labor Risk',
       indicators: ['Regular contractions', 'Pelvic pressure', 'Back pain', 'Fluid leakage'],
       severity: 'High',
-      monitoring: 'Contraction tracking, cervical checks',
-      aiModel: aiModels.symptom
+      monitoring: 'Symptom logging, contraction timing, clinician follow-up',
+      aiModel: aiModels.symptom,
     },
-    anemia: {
+    {
       name: 'Iron Deficiency Anemia',
       indicators: ['Fatigue', 'Weakness', 'Pale skin', 'Shortness of breath'],
       severity: 'Moderate',
-      monitoring: 'Regular blood tests',
-      aiModel: aiModels.vitals
-    }
-  };
-
-  const weeklyTargets = {
-    20: {
-      bloodPressure: { systolic: [100, 130], diastolic: [60, 85] },
-      heartRate: [70, 90],
-      weightGain: { total: [4.5, 6.8], weekly: [0.3, 0.5] },
-      symptoms: ['Round ligament pain', 'Heartburn', 'Increased appetite'],
-      tests: ['Anatomy scan', 'Blood work if needed']
+      monitoring: 'Routine labs and iron support review',
+      aiModel: aiModels.vitals,
     },
-    24: {
-      bloodPressure: { systolic: [100, 135], diastolic: [60, 85] },
-      heartRate: [75, 95],
-      weightGain: { total: [5.9, 9.1], weekly: [0.3, 0.5] },
-      symptoms: ['Glucose screening', 'Possible gestational diabetes test'],
-      tests: ['Glucose tolerance test', 'Blood count']
-    },
-    28: {
-      bloodPressure: { systolic: [100, 135], diastolic: [60, 85] },
-      heartRate: [75, 100],
-      weightGain: { total: [7.7, 11.3], weekly: [0.3, 0.5] },
-      symptoms: ['Third trimester begins', 'Shortness of breath'],
-      tests: ['RhoGAM if Rh negative', 'Blood work']
-    },
-    32: {
-      bloodPressure: { systolic: [100, 140], diastolic: [60, 90] },
-      heartRate: [80, 100],
-      weightGain: { total: [9.5, 13.6], weekly: [0.3, 0.5] },
-      symptoms: ['Braxton Hicks contractions', 'Swelling'],
-      tests: ['Growth scan if needed', 'Blood pressure monitoring']
-    },
-    36: {
-      bloodPressure: { systolic: [100, 140], diastolic: [60, 90] },
-      heartRate: [80, 105],
-      weightGain: { total: [11.3, 15.9], weekly: [0.2, 0.5] },
-      symptoms: ['Pelvic pressure', 'Frequent urination'],
-      tests: ['GBS screening', 'Weekly appointments begin']
-    }
-  };
-
-  const generateHealthInsights = () => {
-    const currentTargets = weeklyTargets[currentWeek] || weeklyTargets[20];
-    const insights = {
-      overall: assessOverallHealth(),
-      riskAssessment: assessRisks(),
-      trends: analyzeTrends(),
-      recommendations: generateRecommendations(),
-      alerts: generateAlerts(),
-      predictions: generatePredictions()
-    };
-    return insights;
-  };
+  ];
 
   const assessOverallHealth = () => {
     let score = 100;
-    let factors = [];
-
-    // Blood pressure assessment
+    const factors = [];
     const bp = vitalSigns.bloodPressure;
+    const hr = vitalSigns.heartRate.bpm;
+    const temp = vitalSigns.temperature.celsius;
+
     if (bp.systolic > 140 || bp.diastolic > 90) {
       score -= 30;
       factors.push('Elevated blood pressure');
@@ -161,15 +111,11 @@ const HealthMonitoring = () => {
       factors.push('Borderline high blood pressure');
     }
 
-    // Heart rate assessment
-    const hr = vitalSigns.heartRate.bpm;
     if (hr > 100 || hr < 60) {
       score -= 10;
       factors.push('Heart rate outside normal range');
     }
 
-    // Temperature assessment
-    const temp = vitalSigns.temperature.celsius;
     if (temp > 37.5) {
       score -= 20;
       factors.push('Elevated temperature');
@@ -178,7 +124,7 @@ const HealthMonitoring = () => {
     return {
       score: Math.max(score, 0),
       status: score >= 80 ? 'Excellent' : score >= 60 ? 'Good' : score >= 40 ? 'Fair' : 'Needs Attention',
-      factors: factors
+      factors,
     };
   };
 
@@ -190,7 +136,7 @@ const HealthMonitoring = () => {
       risks.push({
         condition: 'Preeclampsia',
         risk: 'High',
-        recommendation: 'Immediate medical consultation required'
+        recommendation: 'Immediate medical consultation required',
       });
     }
 
@@ -198,181 +144,188 @@ const HealthMonitoring = () => {
       risks.push({
         condition: 'Infection',
         risk: 'Moderate',
-        recommendation: 'Monitor temperature, consult if persists'
+        recommendation: 'Monitor temperature, hydrate, and contact your clinician if it persists',
       });
     }
 
     return risks;
   };
 
-  const analyzeTrends = () => {
-    // Simulated trend analysis
-    return {
-      bloodPressure: {
-        trend: 'stable',
-        change: '+2 mmHg over last week',
-        prediction: 'Likely to remain stable'
-      },
-      weight: {
-        trend: 'increasing',
-        change: '+0.4 kg this week',
-        prediction: 'On track for healthy weight gain'
-      },
-      heartRate: {
-        trend: 'stable',
-        change: 'No significant change',
-        prediction: 'Normal adaptation to pregnancy'
-      }
-    };
-  };
+  const analyzeTrends = () => ({
+    bloodPressure: {
+      trend: 'stable',
+      change: '+2 mmHg over last week',
+      prediction: 'Likely to remain steady with current routine',
+    },
+    weight: {
+      trend: 'increasing',
+      change: '+0.4 kg this week',
+      prediction: 'On track for healthy pregnancy gain',
+    },
+    heartRate: {
+      trend: 'stable',
+      change: 'No significant change',
+      prediction: 'Normal pregnancy adaptation',
+    },
+  });
 
   const generateRecommendations = () => {
     const recommendations = [];
-    const bp = vitalSigns.bloodPressure;
 
-    if (bp.systolic > 130) {
+    if (vitalSigns.bloodPressure.systolic > 130) {
       recommendations.push({
-        category: 'Blood Pressure',
-        action: 'Reduce sodium intake, increase rest periods',
-        priority: 'High'
+        category: 'Blood pressure',
+        action: 'Reduce sodium, add rest windows, and bring recent readings to your next visit.',
+        priority: 'High',
       });
     }
 
     recommendations.push({
-      category: 'General',
-      action: 'Continue daily monitoring and prenatal vitamins',
-      priority: 'Medium'
+      category: 'Daily rhythm',
+      action: 'Keep logging vitals, hydration, and symptoms in one consistent daily check-in.',
+      priority: 'Medium',
     });
 
     return recommendations;
   };
 
   const generateAlerts = () => {
-    const newAlerts = [];
-    const bp = vitalSigns.bloodPressure;
+    const nextAlerts = [];
 
-    if (bp.systolic >= 140 || bp.diastolic >= 90) {
-      newAlerts.push({
+    if (vitalSigns.bloodPressure.systolic >= 140 || vitalSigns.bloodPressure.diastolic >= 90) {
+      nextAlerts.push({
         id: Date.now(),
         type: 'critical',
-        message: 'Blood pressure elevated - contact healthcare provider',
-        timestamp: new Date(),
-        action: 'Call doctor immediately'
+        message: 'Blood pressure is elevated.',
+        action: 'Contact your healthcare provider now.',
       });
     }
 
     if (vitalSigns.temperature.celsius > 37.5) {
-      newAlerts.push({
+      nextAlerts.push({
         id: Date.now() + 1,
         type: 'warning',
-        message: 'Elevated temperature detected',
-        timestamp: new Date(),
-        action: 'Monitor and rest, call if persists'
+        message: 'Temperature is above your usual range.',
+        action: 'Rest, monitor again, and call if it continues.',
       });
     }
 
-    return newAlerts;
+    return nextAlerts;
   };
 
-  const generatePredictions = () => {
-    return {
-      nextWeek: {
-        bloodPressure: 'Likely to remain stable with current management',
-        weight: 'Expected gain of 0.3-0.5 kg',
-        complications: 'Low risk based on current trends'
-      },
-      delivery: {
-        riskLevel: 'Low',
-        predictedComplications: 'None identified',
-        recommendations: 'Continue current monitoring protocol'
-      }
-    };
-  };
+  const generatePredictions = () => ({
+    nextWeek: {
+      bloodPressure: 'Likely to remain stable with current monitoring.',
+      weight: 'Expected gain of 0.3 to 0.5 kg.',
+      complications: 'Low risk based on current patterns.',
+    },
+    delivery: {
+      riskLevel: 'Low',
+      predictedComplications: 'No clear complication signal identified.',
+      recommendations: 'Continue current monitoring rhythm and follow-up appointments.',
+    },
+  });
+
+  const generateHealthInsights = () => ({
+    overall: assessOverallHealth(),
+    riskAssessment: assessRisks(),
+    trends: analyzeTrends(),
+    recommendations: generateRecommendations(),
+    alerts: generateAlerts(),
+    predictions: generatePredictions(),
+  });
 
   const [healthInsights, setHealthInsights] = useState(generateHealthInsights());
 
   useEffect(() => {
-    setHealthInsights(generateHealthInsights());
-    const newAlerts = generateAlerts();
-    setAlerts(prev => [...prev, ...newAlerts]);
-  }, [vitalSigns, currentWeek]);
+    const nextInsights = generateHealthInsights();
+    setHealthInsights(nextInsights);
+    setAlerts(nextInsights.alerts);
+  }, []);
 
-  const updateVitalSign = (type, value) => {
-    setVitalSigns(prev => ({
-      ...prev,
-      [type]: { ...value, timestamp: new Date() }
-    }));
+  const getStatusTone = (status) => {
+    if (status === 'Excellent') return 'bg-[#edf5ef] text-[#365a49] dark:bg-[#163226] dark:text-[#b8d8c8]';
+    if (status === 'Good') return 'bg-[#f7e7ee] text-[#8e6074] dark:bg-[#3a1e2c] dark:text-[#dfc4cf]';
+    if (status === 'Fair') return 'bg-[#f9efe7] text-[#9f6e3b] dark:bg-[#3c2918] dark:text-[#f2d2a6]';
+    return 'bg-[#f8e8e8] text-[#a45b64] dark:bg-[#3a1b1f] dark:text-[#f0bcc4]';
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Excellent': return 'text-green-600 bg-green-50';
-      case 'Good': return 'text-blue-600 bg-blue-50';
-      case 'Fair': return 'text-yellow-600 bg-yellow-50';
-      case 'Needs Attention': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
-    }
+  const getPriorityTone = (priority) => {
+    if (priority === 'High') return 'bg-[#f8e8e8] text-[#a45b64] dark:bg-[#3a1b1f] dark:text-[#f0bcc4]';
+    if (priority === 'Medium') return 'bg-[#f9efe7] text-[#9f6e3b] dark:bg-[#3c2918] dark:text-[#f2d2a6]';
+    return 'bg-[#edf5ef] text-[#365a49] dark:bg-[#163226] dark:text-[#b8d8c8]';
+  };
+
+  const getMetricTone = (tone) => {
+    if (tone === 'rose') return 'from-[#fff8fb] to-[#fbeaf1] border-[#eed4df] dark:from-[#24131b] dark:to-[#1c1016] dark:border-white/10';
+    if (tone === 'mauve') return 'from-[#fff8fc] to-[#f5edf9] border-[#eadde8] dark:from-[#221621] dark:to-[#1a121d] dark:border-white/10';
+    if (tone === 'sage') return 'from-[#f7fbf7] to-[#edf5ef] border-[#dceadf] dark:from-[#15201a] dark:to-[#101814] dark:border-white/10';
+    return 'from-[#fff9f2] to-[#f9efe7] border-[#eddcc8] dark:from-[#231a14] dark:to-[#1b140f] dark:border-white/10';
   };
 
   return (
-    <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Health Monitoring Center
+    <div className="page-shell max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--care-border)] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#9f5874] shadow-sm dark:bg-white/5 dark:text-[#dfc4cf]">
+            <Shield className="h-4 w-4" />
+            Health monitor
+          </div>
+          <h1 className="mt-5 bg-gradient-to-r from-[#a96f86] via-[#8f7287] to-[#d39ab0] bg-clip-text text-4xl font-semibold tracking-[-0.05em] text-transparent sm:text-5xl lg:text-6xl">
+            Professional monitoring with a calmer maternal interface
           </h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-            Comprehensive pregnancy health monitoring with AI-powered insights and real-time alerts
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-body sm:text-lg">
+            Vitals, risks, recommendations, and alerts are organized into the same care-focused system used across the rest of MomBuddy.
           </p>
         </motion.div>
 
-        {/* AI Models Display */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 mb-8 shadow-xl"
-        >
-          <div className="flex items-center mb-4">
-            <Brain className="w-8 h-8 text-blue-600 mr-3" />
-            <h2 className="text-2xl font-bold text-gray-800">AI Health Monitoring Models</h2>
+        <CareOverviewPanel
+          className="mt-8"
+          title="Monitoring overview"
+          week={`Week ${currentWeek}`}
+          summary="The same weekly snapshot stays visible while you review vitals, risks, and recommendations."
+        />
+
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="mt-10 surface-glass p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold text-[var(--care-text)] dark:text-white">AI health models</h2>
+              <p className="mt-2 text-sm text-muted">The same monitoring layer behind vitals, trend analysis, and guidance.</p>
+            </div>
+            <div className="rounded-full bg-[#f7e7ee] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#9f5874] dark:bg-[#3a1e2c] dark:text-[#dfc4cf]">
+              Week {currentWeek} active
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="mt-5 grid gap-3 md:grid-cols-3 xl:grid-cols-6">
             {Object.entries(aiModels).map(([key, model]) => (
-              <div key={key} className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 border border-blue-200">
-                <div className="text-xs text-blue-600 font-semibold uppercase">{key}</div>
-                <div className="text-sm text-gray-700 font-mono">{model}</div>
+              <div key={key} className="surface-muted rounded-2xl p-3">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9f5874] dark:text-[#dfc4cf]">{key}</div>
+                <div className="mt-1 text-sm text-body">{model}</div>
               </div>
             ))}
           </div>
         </motion.div>
 
-        {/* Active Alerts */}
         <AnimatePresence>
-          {alerts.filter(alert => alert.type === 'critical').map(alert => (
+          {alerts.filter((alert) => alert.type === 'critical').map((alert) => (
             <motion.div
               key={alert.id}
-              initial={{ opacity: 0, y: -50 }}
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              className="mb-6 bg-gradient-to-r from-red-500 to-pink-500 text-white p-4 rounded-2xl shadow-lg"
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-6 rounded-[1.75rem] border border-[#edc8ce] bg-[linear-gradient(135deg,#fff6f6,#fbeaec)] p-5 shadow-[0_20px_45px_-28px_rgba(164,91,100,0.35)] dark:border-[#4a242a] dark:bg-[linear-gradient(135deg,#2b1418,#241015)]"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <AlertTriangle className="w-6 h-6 mr-2 animate-pulse" />
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#a45b64] text-white shadow-sm">
+                    <AlertTriangle className="h-5 w-5 animate-pulse" />
+                  </div>
                   <div>
-                    <div className="font-semibold">{alert.message}</div>
-                    <div className="text-sm opacity-90">{alert.action}</div>
+                    <div className="font-semibold text-[#7b2f3a] dark:text-[#f0bcc4]">{alert.message}</div>
+                    <div className="mt-1 text-sm text-[#9c5a63] dark:text-[#e6aeb8]">{alert.action}</div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
-                  className="text-white/80 hover:text-white text-xl"
-                >
+                <button type="button" onClick={() => setAlerts((prev) => prev.filter((item) => item.id !== alert.id))} className="rounded-xl p-2 text-[#9c5a63] transition hover:bg-white/70 dark:hover:bg-white/5">
                   ✕
                 </button>
               </div>
@@ -380,47 +333,47 @@ const HealthMonitoring = () => {
           ))}
         </AnimatePresence>
 
-        {/* Overall Health Status */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 mb-8 shadow-xl"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <Shield className="w-8 h-8 text-green-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-800">Overall Health Status</h2>
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="mt-8 card-surface p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-[linear-gradient(135deg,#d9b2c1,#b27d93)] text-white shadow-sm">
+                <Shield className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-semibold text-[var(--care-text)] dark:text-white">Overall health status</h2>
+                <p className="mt-2 text-sm text-muted">A simpler summary card that surfaces the next thing to care about first.</p>
+              </div>
             </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-green-600">{healthInsights.overall.score}</div>
-              <div className="text-sm text-gray-500">Health Score</div>
+            <div className="rounded-[1.5rem] bg-[#f7e7ee] px-5 py-4 text-center dark:bg-[#3a1e2c]">
+              <div className="text-3xl font-semibold text-[#8e6074] dark:text-[#dfc4cf]">{healthInsights.overall.score}</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-muted">Health score</div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className={`p-6 rounded-2xl ${getStatusColor(healthInsights.overall.status)}`}>
-              <h3 className="text-xl font-semibold mb-2">Current Status</h3>
-              <p className="text-2xl font-bold">{healthInsights.overall.status}</p>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className={`rounded-[1.5rem] p-5 ${getStatusTone(healthInsights.overall.status)}`}>
+              <div className="text-sm uppercase tracking-[0.18em]">Current status</div>
+              <div className="mt-2 text-2xl font-semibold">{healthInsights.overall.status}</div>
             </div>
-
-            <div className="bg-blue-50 p-6 rounded-2xl">
-              <h3 className="text-xl font-semibold text-blue-800 mb-2">Week {currentWeek}</h3>
-              <p className="text-blue-700">Pregnancy monitoring active</p>
+            <div className="surface-muted rounded-[1.5rem] p-5">
+              <div className="text-sm uppercase tracking-[0.18em] text-muted">Pregnancy week</div>
+              <div className="mt-2 text-2xl font-semibold text-[var(--care-text)] dark:text-white">Week {currentWeek}</div>
+              <div className="mt-1 text-sm text-muted">Monitoring and reminder rhythm active</div>
             </div>
-
-            <div className="bg-purple-50 p-6 rounded-2xl">
-              <h3 className="text-xl font-semibold text-purple-800 mb-2">AI Analysis</h3>
-              <p className="text-purple-700">Real-time monitoring active</p>
+            <div className="surface-muted rounded-[1.5rem] p-5">
+              <div className="text-sm uppercase tracking-[0.18em] text-muted">Analysis mode</div>
+              <div className="mt-2 text-2xl font-semibold text-[var(--care-text)] dark:text-white">Real-time review</div>
+              <div className="mt-1 text-sm text-muted">Clinician-friendly summaries enabled</div>
             </div>
           </div>
 
           {healthInsights.overall.factors.length > 0 && (
-            <div className="mt-6 bg-yellow-50 rounded-xl p-4">
-              <h4 className="font-semibold text-yellow-800 mb-2">Areas for Attention:</h4>
-              <ul className="space-y-1">
+            <div className="mt-6 rounded-[1.5rem] bg-[#f9efe7] p-5 dark:bg-[#3c2918]">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9f6e3b] dark:text-[#f2d2a6]">Areas for attention</h3>
+              <ul className="mt-3 space-y-2 text-sm text-[#8a6540] dark:text-[#f2d2a6]">
                 {healthInsights.overall.factors.map((factor, idx) => (
-                  <li key={idx} className="flex items-center text-yellow-700">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
+                  <li key={idx} className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
                     {factor}
                   </li>
                 ))}
@@ -429,315 +382,258 @@ const HealthMonitoring = () => {
           )}
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Vital Signs Monitoring */}
-          <div className="lg:col-span-2 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl"
-            >
-              <div className="flex items-center mb-6">
-                <Activity className="w-8 h-8 text-blue-600 mr-3" />
-                <h3 className="text-3xl font-bold text-gray-800">Vital Signs</h3>
+        <div className="mt-8 grid gap-8 xl:grid-cols-[1.55fr_0.75fr]">
+          <div className="space-y-8">
+            <motion.section initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="card-surface p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#d9b2c1,#b27d93)] text-white">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold text-[var(--care-text)] dark:text-white">Vital signs</h3>
+                  <p className="text-sm text-muted">Readable cards that prioritize what matters first.</p>
+                </div>
               </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {Object.entries(healthMetrics).map(([key, metric]) => (
-                  <div key={key} className={`bg-gradient-to-br from-${metric.color}-50 to-${metric.color}-100 rounded-xl p-6 border border-${metric.color}-200`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center">
-                        <metric.icon className={`w-6 h-6 text-${metric.color}-600 mr-2`} />
-                        <h4 className={`font-semibold text-${metric.color}-800`}>{metric.name}</h4>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {healthMetrics.map((metric) => (
+                  <div key={metric.key} className={`rounded-[1.75rem] border bg-gradient-to-br p-6 ${getMetricTone(metric.tone)}`}>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/80 text-[#9f5874] shadow-sm dark:bg-white/10 dark:text-[#dfc4cf]">
+                          <metric.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-[var(--care-text)] dark:text-white">{metric.name}</h4>
+                          <div className="text-sm text-muted">{metric.frequency}</div>
+                        </div>
                       </div>
-                      <span className={`text-xs bg-${metric.color}-200 text-${metric.color}-800 px-2 py-1 rounded`}>
-                        {metric.frequency}
+                      <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-[#8e6074] shadow-sm dark:bg-white/10 dark:text-[#dfc4cf]">
+                        {metric.unit}
                       </span>
                     </div>
-
-                    <div className="mb-4">
-                      {key === 'bloodPressure' ? (
-                        <div className="text-3xl font-bold text-gray-800">
-                          {vitalSigns.bloodPressure.systolic}/{vitalSigns.bloodPressure.diastolic}
-                        </div>
-                      ) : key === 'heartRate' ? (
-                        <div className="text-3xl font-bold text-gray-800">
-                          {vitalSigns.heartRate.bpm}
-                        </div>
-                      ) : key === 'weight' ? (
-                        <div className="text-3xl font-bold text-gray-800">
-                          {vitalSigns.weight.kg}
-                        </div>
-                      ) : (
-                        <div className="text-3xl font-bold text-gray-800">
-                          {vitalSigns.temperature.celsius}
-                        </div>
-                      )}
-                      <div className="text-sm text-gray-600">{metric.unit}</div>
-                    </div>
-
-                    <div className="text-xs text-gray-500 mb-3">
-                      Last updated: {vitalSigns[key].timestamp.toLocaleTimeString()}
-                    </div>
-
-                    <div className={`text-xs text-${metric.color}-700 bg-${metric.color}-200 rounded p-2`}>
-                      {metric.importance}
-                    </div>
+                    <div className="mt-5 text-4xl font-semibold text-[var(--care-text)] dark:text-white">{metric.value}</div>
+                    <div className="mt-2 text-xs text-muted">Updated {vitalSigns[metric.key].timestamp.toLocaleTimeString()}</div>
+                    <p className="mt-4 text-sm leading-7 text-body">{metric.importance}</p>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </motion.section>
 
-            {/* Risk Assessment */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl"
-            >
-              <div className="flex items-center mb-6">
-                <Target className="w-8 h-8 text-red-600 mr-3" />
-                <h3 className="text-3xl font-bold text-gray-800">Risk Assessment</h3>
+            <motion.section initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 }} className="card-surface p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#f0c6d6,#c692a7)] text-white">
+                  <Target className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold text-[var(--care-text)] dark:text-white">Risk assessment</h3>
+                  <p className="text-sm text-muted">Clinical context stays visible without becoming visually aggressive.</p>
+                </div>
               </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {Object.entries(riskFactors).map(([key, risk]) => (
-                  <div key={key} className={`rounded-xl p-6 border ${
-                    risk.severity === 'High' ? 'bg-red-50 border-red-200' :
-                    risk.severity === 'Moderate' ? 'bg-orange-50 border-orange-200' :
-                    'bg-green-50 border-green-200'
-                  }`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <h4 className={`font-semibold ${
-                        risk.severity === 'High' ? 'text-red-800' :
-                        risk.severity === 'Moderate' ? 'text-orange-800' :
-                        'text-green-800'
-                      }`}>
-                        {risk.name}
-                      </h4>
-                      <span className={`text-xs px-2 py-1 rounded font-semibold ${
-                        risk.severity === 'High' ? 'bg-red-200 text-red-800' :
-                        risk.severity === 'Moderate' ? 'bg-orange-200 text-orange-800' :
-                        'bg-green-200 text-green-800'
-                      }`}>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {riskFactors.map((risk) => (
+                  <div key={risk.name} className="surface-muted rounded-[1.75rem] p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <h4 className="text-lg font-semibold text-[var(--care-text)] dark:text-white">{risk.name}</h4>
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${getPriorityTone(risk.severity)}`}>
                         {risk.severity}
                       </span>
                     </div>
-
-                    <div className="mb-4">
-                      <h5 className="text-sm font-semibold text-gray-700 mb-2">Key Indicators:</h5>
-                      <ul className="text-xs space-y-1">
-                        {risk.indicators.map((indicator, idx) => (
-                          <li key={idx} className="flex items-center text-gray-600">
-                            <div className="w-1 h-1 bg-gray-400 rounded-full mr-2"></div>
+                    <div className="mt-4">
+                      <div className="text-sm font-medium text-[var(--care-text)] dark:text-white">Key indicators</div>
+                      <ul className="mt-3 space-y-2 text-sm text-body">
+                        {risk.indicators.map((indicator) => (
+                          <li key={indicator} className="flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-[#b27d93]" />
                             {indicator}
                           </li>
                         ))}
                       </ul>
                     </div>
-
-                    <div className="text-xs text-gray-600 mb-2">
-                      <strong>Monitoring:</strong> {risk.monitoring}
+                    <div className="mt-4 text-sm text-body">
+                      <span className="font-semibold text-[var(--care-text)] dark:text-white">Monitoring:</span> {risk.monitoring}
                     </div>
-                    <div className="text-xs text-blue-600">
-                      AI Model: {risk.aiModel}
-                    </div>
+                    <div className="mt-2 text-xs font-medium uppercase tracking-[0.16em] text-[#8e6074] dark:text-[#dfc4cf]">Model: {risk.aiModel}</div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </motion.section>
 
-            {/* Health Trends */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl"
-            >
-              <div className="flex items-center mb-6">
-                <TrendingUp className="w-8 h-8 text-green-600 mr-3" />
-                <h3 className="text-3xl font-bold text-gray-800">Health Trends</h3>
+            <motion.section initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.16 }} className="card-surface p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#a7c9b8,#4b7561)] text-white">
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold text-[var(--care-text)] dark:text-white">Health trends</h3>
+                  <p className="text-sm text-muted">Simple trajectory cards for recurring metrics.</p>
+                </div>
               </div>
-
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="mt-6 grid gap-4 md:grid-cols-3">
                 {Object.entries(healthInsights.trends).map(([metric, trend]) => (
-                  <div key={metric} className="bg-green-50 rounded-xl p-6 border border-green-200">
-                    <h4 className="font-semibold text-green-800 capitalize mb-3">{metric.replace(/([A-Z])/g, ' $1')}</h4>
-                    <div className="space-y-2 text-sm">
+                  <div key={metric} className="rounded-[1.75rem] bg-[#edf5ef] p-6 dark:bg-[#163226]">
+                    <h4 className="text-lg font-semibold capitalize text-[#365a49] dark:text-[#b8d8c8]">{metric.replace(/([A-Z])/g, ' $1')}</h4>
+                    <div className="mt-4 space-y-3 text-sm">
                       <div>
-                        <span className="font-semibold text-gray-700">Trend: </span>
-                        <span className="text-green-700 capitalize">{trend.trend}</span>
+                        <span className="font-semibold text-[var(--care-text)] dark:text-white">Trend:</span>{' '}
+                        <span className="text-[#365a49] capitalize dark:text-[#b8d8c8]">{trend.trend}</span>
                       </div>
                       <div>
-                        <span className="font-semibold text-gray-700">Change: </span>
-                        <span className="text-green-700">{trend.change}</span>
+                        <span className="font-semibold text-[var(--care-text)] dark:text-white">Change:</span>{' '}
+                        <span className="text-[#365a49] dark:text-[#b8d8c8]">{trend.change}</span>
                       </div>
                       <div>
-                        <span className="font-semibold text-gray-700">Prediction: </span>
-                        <span className="text-green-700">{trend.prediction}</span>
+                        <span className="font-semibold text-[var(--care-text)] dark:text-white">Prediction:</span>{' '}
+                        <span className="text-[#365a49] dark:text-[#b8d8c8]">{trend.prediction}</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </motion.section>
           </div>
 
-          {/* Sidebar - AI Insights & Recommendations */}
           <div className="space-y-8">
-            {/* AI Recommendations */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
-            >
-              <div className="flex items-center mb-4">
-                <Brain className="w-6 h-6 text-purple-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">AI Recommendations</h3>
+            <motion.section initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="card-surface p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#d9b2c1,#b27d93)] text-white">
+                  <Brain className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-[var(--care-text)] dark:text-white">AI recommendations</h3>
+                  <p className="text-sm text-muted">Actionable next steps with softer clinical emphasis.</p>
+                </div>
               </div>
-
-              <div className="space-y-3">
+              <div className="mt-5 space-y-3">
                 {healthInsights.recommendations.map((rec, index) => (
-                  <div key={index} className={`p-4 rounded-xl border ${
-                    rec.priority === 'High' ? 'bg-red-50 border-red-200' :
-                    rec.priority === 'Medium' ? 'bg-orange-50 border-orange-200' :
-                    'bg-green-50 border-green-200'
-                  }`}>
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className={`font-semibold ${
-                        rec.priority === 'High' ? 'text-red-800' :
-                        rec.priority === 'Medium' ? 'text-orange-800' :
-                        'text-green-800'
-                      }`}>
-                        {rec.category}
-                      </h4>
-                      <span className={`text-xs px-2 py-1 rounded font-semibold ${
-                        rec.priority === 'High' ? 'bg-red-200 text-red-800' :
-                        rec.priority === 'Medium' ? 'bg-orange-200 text-orange-800' :
-                        'bg-green-200 text-green-800'
-                      }`}>
+                  <div key={index} className="surface-muted rounded-2xl p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h4 className="font-semibold text-[var(--care-text)] dark:text-white">{rec.category}</h4>
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${getPriorityTone(rec.priority)}`}>
                         {rec.priority}
                       </span>
                     </div>
-                    <p className={`text-sm ${
-                      rec.priority === 'High' ? 'text-red-700' :
-                      rec.priority === 'Medium' ? 'text-orange-700' :
-                      'text-green-700'
-                    }`}>
-                      {rec.action}
-                    </p>
+                    <p className="mt-3 text-sm leading-7 text-body">{rec.action}</p>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </motion.section>
 
-            {/* Predictions */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
-            >
-              <div className="flex items-center mb-4">
-                <Zap className="w-6 h-6 text-yellow-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">AI Predictions</h3>
+            <motion.section initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.08 }} className="card-surface p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#f5d7b2,#d0a06d)] text-white">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-[var(--care-text)] dark:text-white">Predictions</h3>
+                  <p className="text-sm text-muted">Short, readable forecast blocks for the next week and delivery outlook.</p>
+                </div>
               </div>
-
-              <div className="space-y-4">
-                <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
-                  <h4 className="font-semibold text-yellow-800 mb-3">Next Week Forecast:</h4>
-                  <div className="space-y-2 text-sm">
+              <div className="mt-5 space-y-4">
+                <div className="rounded-[1.5rem] bg-[#f9efe7] p-4 dark:bg-[#3c2918]">
+                  <h4 className="font-semibold text-[#9f6e3b] dark:text-[#f2d2a6]">Next week forecast</h4>
+                  <div className="mt-3 space-y-2 text-sm text-[#8a6540] dark:text-[#f2d2a6]">
                     {Object.entries(healthInsights.predictions.nextWeek).map(([key, prediction]) => (
                       <div key={key}>
-                        <span className="font-semibold text-gray-700 capitalize">{key.replace(/([A-Z])/g, ' $1')}: </span>
-                        <span className="text-yellow-700">{prediction}</span>
+                        <span className="font-semibold capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span> {prediction}
                       </div>
                     ))}
                   </div>
                 </div>
-
-                <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
-                  <h4 className="font-semibold text-blue-800 mb-3">Delivery Outlook:</h4>
-                  <div className="space-y-2 text-sm">
+                <div className="rounded-[1.5rem] bg-[#f7e7ee] p-4 dark:bg-[#3a1e2c]">
+                  <h4 className="font-semibold text-[#8e6074] dark:text-[#dfc4cf]">Delivery outlook</h4>
+                  <div className="mt-3 space-y-2 text-sm text-[#8e6074] dark:text-[#dfc4cf]">
                     {Object.entries(healthInsights.predictions.delivery).map(([key, prediction]) => (
                       <div key={key}>
-                        <span className="font-semibold text-gray-700 capitalize">{key.replace(/([A-Z])/g, ' $1')}: </span>
-                        <span className="text-blue-700">{prediction}</span>
+                        <span className="font-semibold capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span> {prediction}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
 
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
-            >
-              <div className="flex items-center mb-4">
-                <Bell className="w-6 h-6 text-indigo-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">Quick Actions</h3>
-              </div>
-
-              <div className="space-y-3">
-                <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-black py-3 rounded-xl hover:shadow-lg transition-all">
-                  Log New Vitals
-                </button>
-                <button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-black py-3 rounded-xl hover:shadow-lg transition-all">
-                  Export Health Report
-                </button>
-                <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-black py-3 rounded-xl hover:shadow-lg transition-all">
-                  Schedule Check-up
-                </button>
-                <button className="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl hover:bg-gray-50 transition-all">
-                  Contact Healthcare Provider
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Emergency Contacts */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-red-50 rounded-3xl p-6 border border-red-200"
-            >
-              <div className="flex items-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600 mr-2" />
-                <h3 className="text-xl font-bold text-red-800">Emergency Contacts</h3>
-              </div>
-
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-red-700">Healthcare Provider:</span>
-                  <span className="font-semibold text-red-800">(555) 123-4567</span>
+            <motion.section initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.16 }} className="card-surface p-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#c28aa0,#9f5874)] text-white">
+                  <Bell className="h-5 w-5" />
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-red-700">Hospital L&D:</span>
-                  <span className="font-semibold text-red-800">(555) 987-6543</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-red-700">Emergency:</span>
-                  <span className="font-semibold text-red-800">911</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-[var(--care-text)] dark:text-white">Quick actions</h3>
+                  <p className="text-sm text-muted">Production-style shortcuts using the same visual language.</p>
                 </div>
               </div>
+              <div className="mt-5 space-y-3">
+                <button className="w-full rounded-2xl bg-[linear-gradient(135deg,#c28aa0,#9f5874)] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-22px_rgba(159,88,116,0.5)] transition hover:-translate-y-0.5">
+                  Log new vitals
+                </button>
+                <button className="w-full rounded-2xl bg-[linear-gradient(135deg,#a7c9b8,#4b7561)] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-22px_rgba(75,117,97,0.5)] transition hover:-translate-y-0.5">
+                  Export health report
+                </button>
+                <button className="w-full rounded-2xl bg-[linear-gradient(135deg,#d0a06d,#9f6e3b)] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-22px_rgba(159,110,59,0.5)] transition hover:-translate-y-0.5">
+                  Schedule check-up
+                </button>
+                <button className="w-full rounded-2xl border border-[var(--care-border)] bg-white/70 px-4 py-3 text-sm font-semibold text-[var(--care-text)] transition hover:bg-[var(--care-surface-muted)] dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
+                  Contact healthcare provider
+                </button>
+              </div>
+            </motion.section>
 
-              <div className="mt-4 p-3 bg-red-100 rounded-lg">
-                <h4 className="font-semibold text-red-800 mb-2">Call Immediately If:</h4>
-                <ul className="text-xs text-red-700 space-y-1">
-                  <li>• Severe headaches with vision changes</li>
-                  <li>• Blood pressure 140/90</li>
-                  <li>• Severe abdominal pain</li>
-                  <li>• Heavy bleeding or fluid leakage</li>
-                  <li>• Decreased fetal movement</li>
+            <motion.section initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.24 }} className="rounded-[2rem] border border-[#edc8ce] bg-[linear-gradient(180deg,#fff8f8,#fbeaed)] p-6 shadow-[0_18px_40px_-28px_rgba(164,91,100,0.28)] dark:border-[#4a242a] dark:bg-[linear-gradient(180deg,#2b1418,#221014)]">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#a45b64] text-white">
+                  <AlertTriangle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-[#7b2f3a] dark:text-[#f0bcc4]">Emergency contacts</h3>
+                  <p className="text-sm text-[#9c5a63] dark:text-[#e6aeb8]">Keep urgent care details visible when you need them fast.</p>
+                </div>
+              </div>
+              <div className="mt-5 space-y-3 text-sm">
+                <div className="flex items-center justify-between text-[#8c4750] dark:text-[#f0bcc4]">
+                  <span>Healthcare provider</span>
+                  <span className="font-semibold">(555) 123-4567</span>
+                </div>
+                <div className="flex items-center justify-between text-[#8c4750] dark:text-[#f0bcc4]">
+                  <span>Hospital L&amp;D</span>
+                  <span className="font-semibold">(555) 987-6543</span>
+                </div>
+                <div className="flex items-center justify-between text-[#8c4750] dark:text-[#f0bcc4]">
+                  <span>Emergency</span>
+                  <span className="font-semibold">911</span>
+                </div>
+              </div>
+              <div className="mt-5 rounded-[1.5rem] bg-white/75 p-4 dark:bg-white/5">
+                <h4 className="font-semibold text-[#7b2f3a] dark:text-[#f0bcc4]">Call immediately if</h4>
+                <ul className="mt-3 space-y-2 text-sm text-[#8c4750] dark:text-[#f0bcc4]">
+                  <li>Severe headaches with vision changes</li>
+                  <li>Blood pressure reaches 140/90 or higher</li>
+                  <li>Heavy bleeding, severe pain, or fluid leakage</li>
+                  <li>Decreased fetal movement</li>
                 </ul>
               </div>
-            </motion.div>
+            </motion.section>
           </div>
         </div>
+
+        {healthInsights.riskAssessment.length > 0 && (
+          <div className="mt-8 rounded-[1.75rem] border border-[#edc8ce] bg-[linear-gradient(180deg,#fff8f8,#fbeaed)] p-5 dark:border-[#4a242a] dark:bg-[linear-gradient(180deg,#2b1418,#221014)]">
+            <div className="flex items-center gap-3">
+              <Calendar className="h-5 w-5 text-[#a45b64] dark:text-[#f0bcc4]" />
+              <h3 className="text-lg font-semibold text-[#7b2f3a] dark:text-[#f0bcc4]">Immediate risk notes</h3>
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {healthInsights.riskAssessment.map((risk) => (
+                <div key={risk.condition} className="rounded-[1.25rem] bg-white/75 p-4 dark:bg-white/5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="font-semibold text-[#7b2f3a] dark:text-[#f0bcc4]">{risk.condition}</div>
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${getPriorityTone(risk.risk)}`}>{risk.risk}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-[#8c4750] dark:text-[#f0bcc4]">{risk.recommendation}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

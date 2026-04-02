@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, Brain, AlertTriangle, CheckCircle, TrendingUp, Download, Eye } from 'lucide-react';
+import CareOverviewPanel from './CareOverviewPanel.jsx';
 
 const ReportAnalyzer = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -146,7 +147,7 @@ const ReportAnalyzer = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="page-shell max-w-6xl mx-auto">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -154,13 +155,19 @@ const ReportAnalyzer = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[var(--care-primary)] via-[var(--care-primary-strong)] to-[var(--care-lavender)] bg-clip-text text-transparent">
             AI Report Analyzer
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-body max-w-3xl mx-auto">
             Upload your medical reports and get instant AI-powered insights and personalized recommendations
           </p>
         </motion.div>
+
+        <CareOverviewPanel
+          className="mb-8"
+          title="Report overview"
+          summary="Uploads, analysis results, and next questions for your clinician now stay inside the same weekly summary system."
+        />
 
         {/* Supported Reports */}
         <motion.div

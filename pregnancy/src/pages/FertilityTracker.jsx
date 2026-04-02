@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Thermometer, Heart, TrendingUp, Target, Brain } from 'lucide-react';
+import CareOverviewPanel from '../components/CareOverviewPanel.jsx';
 
 const FertilityTracker = () => {
   const [cycleData, setCycleData] = useState({
@@ -99,20 +100,26 @@ const FertilityTracker = () => {
   };
 
   return (
-    <div className="min-h-screen py-20 px-6 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="page-shell max-w-6xl mx-auto">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[var(--care-primary)] via-[var(--care-primary-strong)] to-[var(--care-lavender)] bg-clip-text text-transparent">
             Fertility Tracker
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-body max-w-3xl mx-auto">
             Track your cycle, predict ovulation, and optimize your chances of conception with AI-powered insights.
           </p>
         </motion.div>
+
+        <CareOverviewPanel
+          className="mb-8"
+          title="Fertility overview"
+          summary="Cycle signals, ovulation timing, and next steps now sit inside the same shared visual system as the rest of MomBuddy."
+        />
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Cycle Tracking Form */}

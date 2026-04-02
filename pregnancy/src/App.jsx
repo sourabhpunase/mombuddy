@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -21,15 +22,17 @@ import HealthMonitoring from './pages/HealthMonitoring';
 import PregnancyPlan30Days from './components/PregnancyPlan30Days';
 import FetalHealthTracker from './components/FetalHealthTracker';
 import UserSpecificStepper from './components/UserSpecificStepper';
+import Trimesters from './pages/Trimesters';
+import { HelpCenter, PrivacyPolicy, TermsOfService } from './pages/SupportPages';
 import './App.css';
-import './styles/futuristic-ai.css';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-rose-50">
+      <ScrollToTop />
+      <div className="app-shell antialiased">
         <Navbar />
-        <main className="pt-16">
+        <main id="main-content" className="pt-16 sm:pt-[4.5rem] scroll-mt-16 sm:scroll-mt-[4.5rem]">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pre-conception" element={<PreConception />} />
@@ -50,6 +53,10 @@ function App() {
             <Route path="/30-day-plan" element={<PregnancyPlan30Days />} />
             <Route path="/fetal-health" element={<FetalHealthTracker />} />
             <Route path="/user-stepper" element={<UserSpecificStepper />} />
+            <Route path="/trimesters" element={<Trimesters />} />
+            <Route path="/help" element={<HelpCenter />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
           </Routes>
         </main>
         <Footer />
@@ -59,11 +66,3 @@ function App() {
 }
 
 export default App;
-
-// import RealtimeApp from 'sourabhrealtime';
-
-// function App() {
-//   return <RealtimeApp apiUrl="http://localhost:3002" />;
-// }
-
-// export default App;

@@ -145,7 +145,7 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
   const currentPlan = generateDailyPlan(currentDay);
 
   return (
-    <div className={`min-h-screen py-20 px-6 bg-gradient-to-br ${config.bgGradient}`}>
+    <div className="page-shell max-w-7xl mx-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -153,10 +153,10 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className={`text-6xl font-bold mb-6 bg-gradient-to-r ${config.gradient} bg-clip-text text-transparent`}>
+          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-[#a96f86] to-[#8f7287] bg-clip-text text-transparent">
             {config.title}
           </h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+          <p className="text-xl text-body max-w-4xl mx-auto">
             Your personalized 30-day journey with daily activities, nutrition, and wellness guidance
           </p>
         </motion.div>
@@ -165,35 +165,35 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 mb-8 shadow-xl"
+          className="surface-glass p-8 mb-8"
         >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <Trophy className={`w-8 h-8 text-${config.color}-600 mr-3`} />
+              <Trophy className="w-8 h-8 text-[#a96f86] mr-3" />
               <div>
-                <h2 className="text-3xl font-bold text-gray-800">Your Progress</h2>
-                <p className="text-gray-600">Day {currentDay} of 30</p>
+                <h2 className="text-3xl font-bold">Your Progress</h2>
+                <p className="text-body">Day {currentDay} of 30</p>
               </div>
             </div>
             <div className="text-right">
-              <div className={`text-4xl font-bold text-${config.color}-600`}>
+              <div className="text-4xl font-bold text-[#8e6074]">
                 {Math.round(getCompletionPercentage())}%
               </div>
-              <div className="text-sm text-gray-500">Complete</div>
+              <div className="text-sm text-body">Complete</div>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mb-6">
-            <div className="bg-gray-200 rounded-full h-4">
+            <div className="bg-[var(--care-border)] rounded-full h-4">
               <motion.div
-                className={`bg-gradient-to-r ${config.gradient} h-4 rounded-full`}
+                className="bg-gradient-to-r from-[#d39ab0] to-[#a96f86] h-4 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${getCompletionPercentage()}%` }}
                 transition={{ duration: 1 }}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <div className="flex justify-between text-xs text-body mt-2">
               <span>Day 1</span>
               <span>{completedDays.length} days completed</span>
               <span>Day 30</span>
@@ -213,10 +213,10 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
                   onClick={() => setCurrentDay(day)}
                   className={`aspect-square rounded-xl font-semibold text-sm transition-all ${
                     isCompleted
-                      ? 'bg-green-500 text-white shadow-lg'
+                      ? 'bg-[#a7c9b8] text-[#244236] shadow-lg'
                       : isCurrent
-                        ? 'bg-blue-100 text-blue-800 ring-2 ring-blue-400'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-[#f3e2ea] text-[#8e6074] ring-2 ring-[#d39ab0]'
+                        : 'bg-[var(--care-surface-muted)] text-[var(--care-text)] hover:bg-[#f4e7ed]'
                   }`}
                 >
                   {isCompleted ? <CheckCircle className="w-4 h-4 mx-auto" /> : day}
@@ -233,25 +233,25 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl text-center"
+              className="card-surface p-8 text-center"
             >
               <div className="text-8xl mb-4">{currentPlan.character}</div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">{currentPlan.title}</h2>
-              <p className={`text-${config.color}-600 font-semibold`}>Day {currentDay} Activities</p>
+              <h2 className="text-3xl font-bold mb-2">{currentPlan.title}</h2>
+              <p className="text-[#8e6074] font-semibold">Day {currentDay} Activities</p>
             </motion.div>
 
             {/* Daily Activities */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-xl"
+              className="card-surface p-8"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-800">Today's Activities</h3>
+                <h3 className="text-2xl font-bold">Today's Activities</h3>
                 <button
                   onClick={() => completeDay(currentDay)}
                   disabled={completedDays.includes(currentDay)}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 flex items-center font-semibold hover:from-blue-700 hover:to-purple-700"
+                  className="px-6 py-3 bg-gradient-to-r from-[#c28aa0] to-[#8f7287] text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 flex items-center font-semibold"
                 >
                   {completedDays.includes(currentDay) ? (
                     <>
@@ -276,8 +276,8 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
                     transition={{ delay: index * 0.1 }}
                     className={`p-6 rounded-2xl border-2 cursor-pointer transition-all ${
                       selectedActivity === index
-                        ? 'bg-blue-50 border-blue-400 shadow-lg'
-                        : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                        ? 'bg-[#f7eaf0] border-[#d39ab0] shadow-lg'
+                        : 'bg-[var(--care-surface-muted)] border-[var(--care-border)] hover:border-[var(--care-border-strong)]'
                     }`}
                     onClick={() => setSelectedActivity(selectedActivity === index ? null : index)}
                   >
@@ -285,15 +285,15 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
                       <div className="flex items-center">
                         <span className="text-2xl mr-3">{activity.icon}</span>
                         <div>
-                          <h4 className="font-semibold text-gray-800">{activity.name}</h4>
-                          <p className="text-sm text-gray-600 capitalize">{activity.type}</p>
+                          <h4 className="font-semibold">{activity.name}</h4>
+                          <p className="text-sm text-body capitalize">{activity.type}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`text-sm font-semibold text-${config.color}-600`}>
+                        <div className="text-sm font-semibold text-[#8e6074]">
                           {activity.duration}
                         </div>
-                        <Play className="w-4 h-4 text-gray-400 mt-1" />
+                        <Play className="w-4 h-4 text-[var(--care-text-muted)] mt-1" />
                       </div>
                     </div>
 
@@ -303,12 +303,12 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="border-t border-gray-200 pt-3 mt-3"
+                          className="border-t border-[var(--care-border)] pt-3 mt-3"
                         >
-                          <p className="text-sm text-gray-700 mb-3">
+                          <p className="text-sm text-body mb-3">
                             Detailed instructions for {activity.name.toLowerCase()} will appear here.
                           </p>
-                          <button className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-black py-2 rounded-lg hover:shadow-md transition-all text-sm font-semibold">
+                          <button className="w-full bg-gradient-to-r from-[#d39ab0] to-[#a96f86] text-white py-2 rounded-lg hover:shadow-md transition-all text-sm font-semibold">
                             Start Activity
                           </button>
                         </motion.div>
@@ -326,14 +326,14 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
+              className="card-surface p-6"
             >
               <div className="flex items-center mb-4">
-                <Star className={`w-6 h-6 text-${config.color}-500 mr-2`} />
-                <h3 className="text-xl font-bold text-gray-800">Today's Tips</h3>
+                <Star className="w-6 h-6 text-[#a96f86] mr-2" />
+                <h3 className="text-xl font-bold">Today's Tips</h3>
               </div>
-              <div className={`bg-${config.color}-50 rounded-xl p-4 border border-${config.color}-200 mb-4`}>
-                <p className={`text-${config.color}-800 font-medium`}>{currentPlan.tips}</p>
+              <div className="surface-muted rounded-xl p-4 mb-4">
+                <p className="text-[#8e6074] font-medium">{currentPlan.tips}</p>
               </div>
             </motion.div>
 
@@ -342,14 +342,14 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
+              className="card-surface p-6"
             >
               <div className="flex items-center mb-4">
-                <Heart className="w-6 h-6 text-red-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">Nutrition Focus</h3>
+                <Heart className="w-6 h-6 text-[#a96f86] mr-2" />
+                <h3 className="text-xl font-bold">Nutrition Focus</h3>
               </div>
-              <div className="bg-red-50 rounded-xl p-4 border border-red-200">
-                <p className="text-red-800">{currentPlan.nutrition}</p>
+              <div className="surface-muted rounded-xl p-4">
+                <p className="text-body">{currentPlan.nutrition}</p>
               </div>
             </motion.div>
 
@@ -358,14 +358,14 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
+              className="card-surface p-6"
             >
               <div className="flex items-center mb-4">
-                <Activity className="w-6 h-6 text-green-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">Exercise Focus</h3>
+                <Activity className="w-6 h-6 text-[#a96f86] mr-2" />
+                <h3 className="text-xl font-bold">Exercise Focus</h3>
               </div>
-              <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-                <p className="text-green-800">{currentPlan.exercise}</p>
+              <div className="surface-muted rounded-xl p-4">
+                <p className="text-body">{currentPlan.exercise}</p>
               </div>
             </motion.div>
 
@@ -374,11 +374,11 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-xl"
+              className="card-surface p-6"
             >
               <div className="flex items-center mb-4">
-                <Trophy className="w-6 h-6 text-yellow-500 mr-2" />
-                <h3 className="text-xl font-bold text-gray-800">Achievements</h3>
+                <Trophy className="w-6 h-6 text-[#a96f86] mr-2" />
+                <h3 className="text-xl font-bold">Achievements</h3>
               </div>
               <div className="space-y-3">
                 {[
@@ -391,17 +391,17 @@ const PregnancyPlan30Days = ({ userProfile, stage = 'pre-conception' }) => {
                     key={index}
                     className={`flex items-center p-3 rounded-xl ${
                       badge.unlocked
-                        ? 'bg-yellow-50 border border-yellow-200'
-                        : 'bg-gray-50 border border-gray-200 opacity-50'
+                        ? 'bg-[#faf4e4] border border-[#e2d0a5]'
+                        : 'bg-[var(--care-surface-muted)] border border-[var(--care-border)] opacity-50'
                     }`}
                   >
                     <span className="text-2xl mr-3">{badge.icon}</span>
                     <div>
-                      <div className={`font-semibold ${badge.unlocked ? 'text-yellow-800' : 'text-gray-600'}`}>
+                      <div className={`font-semibold ${badge.unlocked ? 'text-[#6b5730]' : 'text-[var(--care-text-muted)]'}`}>
                         {badge.name}
                       </div>
                       {badge.unlocked && (
-                        <div className="text-xs text-yellow-600">Unlocked!</div>
+                        <div className="text-xs text-[#9c7e43]">Unlocked!</div>
                       )}
                     </div>
                   </div>

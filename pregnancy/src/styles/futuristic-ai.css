@@ -1301,3 +1301,9 @@ body {
     font-size: 0.95rem !important;
   }
 }
+
+/* Dark theme: override global light body from this file */
+html.dark body {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+}
